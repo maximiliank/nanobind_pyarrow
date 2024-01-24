@@ -57,4 +57,21 @@ The type caster headers are structured in a similar form than the headers in ``p
 ```
 
 If you want to consume the ``C++`` artifacts as distributed by the ``PyPi`` ``pyarrow`` package in your own ``CMake`` 
-project, please have a look at [FindPyArrow.cmake](cmake/FindPyArrow.cmake).
+project, please have a look at [FindPyArrow.cmake](cmake/FindPyArrow.cmake). It requires ``Python``, ``nanobind`` and ``pyarrow`` as dependencies. By default it used the following find strategy
+
+```cmake
+if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
+  find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
+endif()
+
+if(NOT TARGET nanobind::nanobind)
+  # Import nanobind through CMake's find_package mechanism
+  set(nanobind_ROOT "${Python_SITELIB}/nanobind/cmake")
+  find_package(nanobind CONFIG REQUIRED)
+endif()
+
+if(NOT TARGET nanobind_pyarrow::pyarrow)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+  find_package(PyArrow REQUIRED)
+endif()
+```

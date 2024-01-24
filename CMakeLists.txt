@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
 
-#include(cmake/prelude.cmake)
-
 project(
   nanobind_pyarrow
   VERSION 0.1.0
@@ -46,6 +44,7 @@ target_compile_features(nanobind_pyarrow_nanobind_pyarrow INTERFACE cxx_std_17)
 if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
   find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
 endif()
+
 if(NOT TARGET nanobind::nanobind)
   # Import nanobind through CMake's find_package mechanism
   set(nanobind_ROOT "${Python_SITELIB}/nanobind/cmake")
