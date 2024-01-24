@@ -33,6 +33,9 @@ jobs:
 
     - name: Install the latest CMake
       uses: lukka/get-cmake@latest
+    
+    - name: Install nanobind
+      run: python -m pip install nanobind
 
     - name: Install pyarrow
       run: python -m pip install pyarrow
