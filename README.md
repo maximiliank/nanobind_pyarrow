@@ -39,7 +39,7 @@ The type caster headers are structured in a similar form than the headers in ``p
 
 ```cpp
     #include <memory>
-    #include <nanobind_nanobind.h>
+    #include <nanobind/nanobind.h>
 
     #include <nanobind_pyarrow/pyarrow_import.h>
     #include <nanobind_pyarrow/array_primitive.h>
@@ -57,9 +57,23 @@ The type caster headers are structured in a similar form than the headers in ``p
 ```
 
 If you want to consume the ``C++`` artifacts as distributed by the ``PyPi`` ``pyarrow`` package in your own ``CMake`` 
-project, please have a look at [FindPyArrow.cmake](cmake/FindPyArrow.cmake). It requires ``Python``, ``nanobind`` and ``pyarrow`` as dependencies. By default it used the following find strategy
+project, please have a look at [FindPyArrow.cmake](cmake/FindPyArrow.cmake). It requires ``Python``, ``nanobind`` and ``pyarrow`` as dependencies.
+
+Usage via FetchContent
+----------------------
+
+The recommended way to use it is via ``FetchContent``. Here is an example
 
 ```cmake
+include(FetchContent)
+FetchContent_Declare(
+  nanobind_pyarrow
+  GIT_REPOSITORY https://github.com/maximiliank/nanobind_pyarrow.git
+  GIT_TAG origin/main
+  UPDATE_DISCONNECTED ON)
+
+FetchContent_MakeAvailable(nanobind_pyarrow)
+
 if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
   find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
 endif()
@@ -71,7 +85,37 @@ if(NOT TARGET nanobind::nanobind)
 endif()
 
 if(NOT TARGET nanobind_pyarrow::pyarrow)
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${nanobind_pyarrow_SOURCE_DIR}/cmake")
   find_package(PyArrow REQUIRED)
 endif()
+
+nanobind_add_module(pyarrow_extension bindings.cpp)
+target_link_libraries(pyarrow_extension PRIVATE nanobind_pyarrow::nanobind_pyarrow nanobind_pyarrow::pyarrow)
+```
+
+In case you want to create ``wheel`` files via ``auditwheel`` it is important that the dependent ``pyarrow`` libraries are installed with the libraries, e.g. by adding the following to your ``CMakeLists.txt``:
+```cmake
+install(CODE [[
+  file(GET_RUNTIME_DEPENDENCIES
+    LIBRARIES $<TARGET_FILE:pyarrow_extension>
+    RESOLVED_DEPENDENCIES_VAR _r_deps
+    UNRESOLVED_DEPENDENCIES_VAR _u_deps
+  )
+  foreach(_file ${_r_deps})
+    if(_file MATCHES ".*lib(arrow|parquet).*\\.so")
+      file(INSTALL
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+        TYPE SHARED_LIBRARY
+        FOLLOW_SYMLINK_CHAIN
+        FILES "${_file}"
+      )
+    endif()
+  endforeach()
+  list(LENGTH _u_deps _u_length)
+  if("${_u_length}" GREATER 0)
+    message(WARNING "Unresolved dependencies detected!")
+  endif()
+]])
+
+install(TARGETS pyarrow_extension LIBRARY DESTINATION .)
 ```

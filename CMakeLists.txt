@@ -41,21 +41,6 @@ target_include_directories(nanobind_pyarrow_nanobind_pyarrow ${warning_guard}
 
 target_compile_features(nanobind_pyarrow_nanobind_pyarrow INTERFACE cxx_std_17)
 
-if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
-  find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
-endif()
-
-if(NOT TARGET nanobind::nanobind)
-  # Import nanobind through CMake's find_package mechanism
-  set(nanobind_ROOT "${Python_SITELIB}/nanobind/cmake")
-  find_package(nanobind CONFIG REQUIRED)
-endif()
-
-if(NOT TARGET nanobind_pyarrow::pyarrow)
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-  find_package(PyArrow REQUIRED)
-endif()
-
 if(PROJECT_IS_TOP_LEVEL)
   add_subdirectory(tests)
 endif()

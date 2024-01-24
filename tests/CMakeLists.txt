@@ -1,3 +1,18 @@
+if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
+  find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
+endif()
+
+if(NOT TARGET nanobind::nanobind)
+  # Import nanobind through CMake's find_package mechanism
+  set(nanobind_ROOT "${Python_SITELIB}/nanobind/cmake")
+  find_package(nanobind CONFIG REQUIRED)
+endif()
+
+if(NOT TARGET nanobind_pyarrow::pyarrow)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+  find_package(PyArrow REQUIRED)
+endif()
+
 function(add_extension extension_name)
   set(extension_target test_${extension_name}_ext)
   nanobind_add_module(${extension_target} test_${extension_name}.cpp)
