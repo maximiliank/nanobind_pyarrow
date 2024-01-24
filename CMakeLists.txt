@@ -56,6 +56,6 @@ if(NOT TARGET nanobind_pyarrow::pyarrow)
   find_package(PyArrow REQUIRED)
 endif()
 
-if(NOT PROJECT_IS_TOP_LEVEL)
+if(PROJECT_IS_TOP_LEVEL)
   add_subdirectory(tests)
 endif()
