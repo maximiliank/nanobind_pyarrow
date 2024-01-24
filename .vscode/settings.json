@@ -1,0 +1,27 @@
+{
+   "output.smartScroll.enabled": false,
+   "editor.formatOnType": false,
+   "editor.formatOnSave": true,
+   "cmake.options.statusBarVisibility": "compact",
+   "cmake.configureOnOpen": true,
+   "clangd.onConfigChanged": "restart",
+   "clangd.arguments": [
+      "-log=info",
+      "--enable-config",
+      "--compile-commands-dir=${workspaceFolder}/build"
+   ],
+   "C_Cpp.intelliSenseEngine": "disabled",
+   "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+         "source.organizeImports": "explicit",
+         "source.unusedImports": "explicit"
+      },
+   },
+   "isort.args": [ "--profile", "black" ],
+   "python.analysis.typeCheckingMode": "basic",
+   "black-formatter.args": [ "--line-length=120", ],
+   "json.format.keepLines": true,
+   "editor.rulers": [ 120 ],
+}

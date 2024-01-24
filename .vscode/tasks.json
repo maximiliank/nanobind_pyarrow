@@ -1,0 +1,52 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Create virtual environment",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [ "-m", "venv", "${workspaceFolder}/.venv" ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Install test requirements",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [ "-m", "pip", "install", "-r", "tests/requirements.txt" ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "type": "cmake",
+            "label": "CMake: build",
+            "command": "build",
+            "targets": [
+                "all"
+            ],
+            "group": "build",
+            "problemMatcher": [ ],
+            "detail": "CMake template build task"
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [ "-m", "pytest" ],
+            "options": {
+                "cwd": "${workspaceFolder}/build/tests"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": [ "CMake: build" ]
+        },
+    ]
+}
