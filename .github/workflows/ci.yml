@@ -46,10 +46,10 @@ jobs:
 
     - name: Configure
       run: >
-        cmake -S . -B build
+        cmake -S . -B build -DPython_EXECUTABLE=${{ steps.setup_python.outputs.python-path }}
 
     - name: Build C++
-      run: cmake --build build -j 2 -DPython_EXECUTABLE=${{ steps.setup_python.outputs.python-path }}
+      run: cmake --build build -j 2
 
     - name: Run tests
       run: >
