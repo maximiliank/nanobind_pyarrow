@@ -95,6 +95,11 @@ target_link_libraries(pyarrow_extension PRIVATE nanobind_pyarrow::nanobind_pyarr
 
 In case you want to create ``wheel`` files via ``auditwheel`` it is important that the dependent ``pyarrow`` libraries are installed with the libraries, e.g. by adding the following to your ``CMakeLists.txt``:
 ```cmake
+set_property(
+  TARGET pyarrow_extension
+  APPEND
+  PROPERTY INSTALL_RPATH "$ORIGIN/lib")
+  
 install(CODE [[
   file(GET_RUNTIME_DEPENDENCIES
     LIBRARIES $<TARGET_FILE:pyarrow_extension>

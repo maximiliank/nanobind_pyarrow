@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest']
-        python: ['3.10', '3.11', '3.12']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     name: "Python ${{ matrix.python }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
@@ -27,6 +27,7 @@ jobs:
 
     - name: Setup Python ${{ matrix.python }}
       uses: actions/setup-python@v5
+      id: setup_python
       with:
         python-version: ${{ matrix.python }}
         cache: 'pip'
@@ -48,7 +49,7 @@ jobs:
         cmake -S . -B build
 
     - name: Build C++
-      run: cmake --build build -j 2
+      run: cmake --build build -j 2 -DPython_EXECUTABLE=${{ steps.setup_python.outputs.python-path }}
 
     - name: Run tests
       run: >
