@@ -37,3 +37,23 @@ def test_numeric_array(dtype):
     arr = pa.array(np_arr)
     func = getattr(t, f"test_{str(arr.type)}_array")
     assert func(arr).equals(arr)
+
+
+@pytest.mark.parametrize(
+    "dtype",
+    [pa.time32("s"), pa.time32("ms"), pa.time64("us"), pa.time64("ns")],
+)
+def test_time_array(dtype):
+    arr = pa.array([1, 2, 3], type=dtype)
+    func = getattr(t, f"test_{str(arr.type).split('[')[0]}_array")
+    assert func(arr).equals(arr)
+
+
+@pytest.mark.parametrize(
+    "dtype",
+    [pa.timestamp("s"), pa.timestamp("ms"), pa.timestamp("us"), pa.timestamp("ns")],
+)
+def test_timestamp_array(dtype):
+    arr = pa.array([1, 2, 3], type=dtype)
+    func = getattr(t, f"test_{str(arr.type).split('[')[0]}_array")
+    assert func(arr).equals(arr)

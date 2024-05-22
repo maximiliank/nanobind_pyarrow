@@ -6,5 +6,7 @@ import test_array_binary_ext as t
 @pytest.mark.parametrize("dtype", [pa.string, pa.large_string])
 def test_string_array(dtype):
     arr = pa.array(["foo", "bar"] * 50, type=dtype())
-    func = getattr(t, f"test_{str(arr.type)}_array")
+    type_str = str(arr.type).split("[")[0]
+    print(type_str)
+    func = getattr(t, f"test_{type_str}_array")
     assert func(arr).equals(arr)

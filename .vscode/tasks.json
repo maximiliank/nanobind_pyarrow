@@ -38,7 +38,7 @@
             "label": "Run tests",
             "type": "shell",
             "command": "${command:python.interpreterPath}",
-            "args": [ "-m", "pytest" ],
+            "args": [ "-m", "pytest", "--verbose" ],
             "options": {
                 "cwd": "${workspaceFolder}/build/tests"
             },
