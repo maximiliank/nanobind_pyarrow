@@ -16,13 +16,13 @@
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-#define NB_REGISTER_PYARROW_ARRAY(name)                                                          \
-template<>                                                                                       \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                         \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                 \
-};                                                                                               \
-template<>                                                                                       \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_ARRAY(name)                                                                                \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
 
 // array_base classes
 NB_REGISTER_PYARROW_ARRAY(Array)
@@ -58,6 +58,7 @@ NB_REGISTER_PYARROW_ARRAY(Date64Array)
 
 NB_REGISTER_PYARROW_ARRAY(Time32Array)
 NB_REGISTER_PYARROW_ARRAY(Time64Array)
+NB_REGISTER_PYARROW_ARRAY(TimestampArray)
 NB_REGISTER_PYARROW_ARRAY(MonthIntervalArray)
 NB_REGISTER_PYARROW_ARRAY(DurationArray)
 

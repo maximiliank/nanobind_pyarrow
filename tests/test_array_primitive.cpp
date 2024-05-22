@@ -34,4 +34,9 @@ NB_MODULE(test_array_primitive_ext, m)
     m.def("test_uint16_array", funcCopy<arrow::UInt16Array>());
     m.def("test_uint32_array", funcCopy<arrow::UInt32Array>());
     m.def("test_uint64_array", funcCopy<arrow::UInt64Array>());
+
+    // Time & Timestamp
+    m.def("test_time32_array", funcCopy<arrow::Time32Array>());
+    m.def("test_time64_array", funcCopy<arrow::Time64Array>());
+    m.def("test_timestamp_array", funcCopy<arrow::TimestampArray>());
 }
