@@ -18,4 +18,8 @@ NB_MODULE(test_array_binary_ext, m)
     // StringArrays
     m.def("test_string_array", funcCopy<arrow::StringArray>());
     m.def("test_large_string_array", funcCopy<arrow::LargeStringArray>());
+
+    // BinaryViews
+    m.def("test_binary_view_array", funcCopy<arrow::BinaryViewArray>());
+    m.def("test_string_view_array", funcCopy<arrow::StringViewArray>());
 }

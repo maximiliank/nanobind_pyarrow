@@ -1,3 +1,4 @@
+set(Python_ROOT_DIR  ${CMAKE_SOURCE_DIR}/.venv/bin)
 if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
   find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
 endif()
@@ -56,7 +57,7 @@ if(NOT (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR) OR MSVC)
     set(OUT_FILE ${OUT_DIR}/${TEST_FILE})
     set(TEST_FILES_OUT ${TEST_FILES_OUT} ${OUT_FILE})
     add_custom_command(
-      DEPENDS ${IN_FILE} TARGET
+      DEPENDS ${IN_FILE}
       OUTPUT ${OUT_FILE}
       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${IN_FILE} ${OUT_DIR})
   endforeach()
