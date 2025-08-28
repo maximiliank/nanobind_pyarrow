@@ -16,12 +16,13 @@
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-template<>                                                                                       
-struct pyarrow::pyarrow_caster_name_trait<arrow::Table> {                                         
-    static constexpr auto Name = const_name("Table");                                 
-};                                                                                               
-template<>                                                                                       
-struct type_caster<std::shared_ptr<arrow::Table>> : pyarrow::pyarrow_caster<arrow::Table, arrow::py::is_table, arrow::py::wrap_table, arrow::py::unwrap_table> {};
+template<>
+struct pyarrow::pyarrow_caster_name_trait<arrow::Table> {
+    static constexpr auto Name = const_name("Table");
+};
+template<>
+struct type_caster<std::shared_ptr<arrow::Table>>
+    : pyarrow::pyarrow_caster<arrow::Table, arrow::py::is_table, arrow::py::wrap_table, arrow::py::unwrap_table> {};
 
 NAMESPACE_END(detail)
 NAMESPACE_END(NB_NAMESPACE)

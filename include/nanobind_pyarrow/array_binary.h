@@ -11,25 +11,30 @@
 
 #include <nanobind/nanobind.h>
 #include <memory>
+#include <arrow/util/config.h>
 #include <arrow/array/array_binary.h>
 #include <nanobind_pyarrow/detail/array_caster.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-#define NB_REGISTER_PYARROW_BINARY_ARRAY(name)                                                   \
-template<>                                                                                       \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                         \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                 \
-} ;                                                                                              \
-template<>                                                                                       \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_BINARY_ARRAY(name)                                                                         \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
 
 NB_REGISTER_PYARROW_BINARY_ARRAY(BinaryArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(LargeBinaryArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(StringArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(LargeStringArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(FixedSizeBinaryArray)
+#if ARROW_VERSION_MAJOR >= 15
+NB_REGISTER_PYARROW_BINARY_ARRAY(StringViewArray)
+NB_REGISTER_PYARROW_BINARY_ARRAY(BinaryViewArray)
+#endif
 #undef NB_REGISTER_PYARROW_BINARY_ARRAY
 
 

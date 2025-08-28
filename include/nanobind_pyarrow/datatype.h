@@ -12,24 +12,26 @@
 #include <nanobind/nanobind.h>
 #include <memory>
 #include <nanobind_pyarrow/detail/caster.h>
+#include <arrow/util/config.h>
 #include <arrow/type.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
 
-template <typename T>
-struct pyarrow_data_type_caster : pyarrow_caster<T, arrow::py::is_data_type, arrow::py::wrap_data_type, arrow::py::unwrap_data_type> {};
+template<typename T>
+struct pyarrow_data_type_caster
+    : pyarrow_caster<T, arrow::py::is_data_type, arrow::py::wrap_data_type, arrow::py::unwrap_data_type> {};
 
 NAMESPACE_END(pyarrow)
 
-#define NB_REGISTER_PYARROW_DATATYPE(name)                                                           \
-template<>                                                                                           \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                             \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                     \
-};                                                                                                   \
-template<>                                                                                           \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_data_type_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_DATATYPE(name)                                                                             \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_data_type_caster<arrow::name> {};
 
 NB_REGISTER_PYARROW_DATATYPE(DataType)
 NB_REGISTER_PYARROW_DATATYPE(FixedWidthType)
@@ -77,7 +79,10 @@ NB_REGISTER_PYARROW_DATATYPE(DenseUnionType)
 NB_REGISTER_PYARROW_DATATYPE(SparseUnionType)
 NB_REGISTER_PYARROW_DATATYPE(DictionaryType)
 NB_REGISTER_PYARROW_DATATYPE(RunEndEncodedType)
-
+#if ARROW_VERSION_MAJOR >= 15
+NB_REGISTER_PYARROW_DATATYPE(StringViewType)
+NB_REGISTER_PYARROW_DATATYPE(BinaryViewType)
+#endif
 #undef NB_REGISTER_PYARROW_DATATYPE
 
 NAMESPACE_END(detail)

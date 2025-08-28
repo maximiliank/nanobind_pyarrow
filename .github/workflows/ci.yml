@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest']
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
 
     name: "Python ${{ matrix.python }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
@@ -34,15 +34,12 @@ jobs:
 
     - name: Install the latest CMake
       uses: lukka/get-cmake@latest
-    
-    - name: Install nanobind
-      run: python -m pip install nanobind
 
-    - name: Install pyarrow
-      run: python -m pip install pyarrow
+    - name: Install requirements
+      run: python -m pip install -r tests/requirements.txt
 
-    - name: Install PyTest
-      run: python -m pip install pytest pytest-github-actions-annotate-failures
+    - name: Install PyTest github annotations
+      run: python -m pip install pytest-github-actions-annotate-failures
 
     - name: Configure
       run: >
@@ -55,3 +52,15 @@ jobs:
       run: >
         cd build;
         python -m pytest
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [standard]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1

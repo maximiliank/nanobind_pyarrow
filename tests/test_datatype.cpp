@@ -53,4 +53,6 @@ NB_MODULE(test_datatype_ext, m)
     m.def("test_sparseunion_type", func<arrow::SparseUnionType>());
     m.def("test_dictionary_type", func<arrow::DictionaryType>());
     m.def("test_runendencoded_type", func<arrow::RunEndEncodedType>());
+    m.def("test_string_view_type", func<arrow::StringViewType>());
+    m.def("test_binary_view_type", func<arrow::BinaryViewType>());
 }

@@ -18,7 +18,7 @@ NAMESPACE_BEGIN(detail)
 
 NAMESPACE_BEGIN(pyarrow)
 
-template <typename T>
+template<typename T>
 struct pyarrow_array_caster : pyarrow_caster<T, arrow::py::is_array, arrow::py::wrap_array, arrow::py::unwrap_array> {};
 
 NAMESPACE_END(pyarrow)

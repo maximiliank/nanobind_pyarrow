@@ -12,24 +12,26 @@
 #include <nanobind/nanobind.h>
 #include <memory>
 #include <nanobind_pyarrow/detail/caster.h>
+#include <arrow/util/config.h>
 #include <arrow/scalar.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
 
-template <typename T>
-struct pyarrow_scalar_caster : pyarrow_caster<T, arrow::py::is_scalar, arrow::py::wrap_scalar, arrow::py::unwrap_scalar> {};
+template<typename T>
+struct pyarrow_scalar_caster
+    : pyarrow_caster<T, arrow::py::is_scalar, arrow::py::wrap_scalar, arrow::py::unwrap_scalar> {};
 
 NAMESPACE_END(pyarrow)
 
-#define NB_REGISTER_PYARROW_SCALAR(name)                                                           \
-template<>                                                                                         \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                           \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                   \
-};                                                                                                 \
-template<>                                                                                         \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_scalar_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_SCALAR(name)                                                                               \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_scalar_caster<arrow::name> {};
 
 // See https://arrow.apache.org/docs/cpp/api/scalar.html
 NB_REGISTER_PYARROW_SCALAR(Scalar)
@@ -75,7 +77,10 @@ NB_REGISTER_PYARROW_SCALAR(DenseUnionScalar)
 NB_REGISTER_PYARROW_SCALAR(RunEndEncodedScalar)
 NB_REGISTER_PYARROW_SCALAR(DictionaryScalar)
 NB_REGISTER_PYARROW_SCALAR(ExtensionScalar)
-
+#if ARROW_VERSION_MAJOR >= 15
+NB_REGISTER_PYARROW_SCALAR(StringViewScalar)
+NB_REGISTER_PYARROW_SCALAR(BinaryViewScalar)
+#endif
 #undef NB_REGISTER_PYARROW_SCALAR
 
 NAMESPACE_END(detail)

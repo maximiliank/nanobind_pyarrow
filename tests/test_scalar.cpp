@@ -47,4 +47,6 @@ NB_MODULE(test_scalar_ext, m)
     m.def("test_monthdaynanointerval_scalar", func<arrow::MonthDayNanoIntervalScalar>());
     m.def("test_struct_scalar", func<arrow::StructScalar>());
     m.def("test_map_scalar", func<arrow::MapScalar>());
+    m.def("test_binaryview_scalar", func<arrow::BinaryViewScalar>());
+    m.def("test_stringview_scalar", func<arrow::StringViewScalar>());
 }

@@ -44,6 +44,8 @@ import test_datatype_ext as t
         pa.union([pa.field("a", pa.binary(10)), pa.field("b", pa.string())], mode=pa.lib.UnionMode_SPARSE),
         pa.dictionary(pa.int32(), pa.string()),
         pa.run_end_encoded(pa.int64(), pa.uint8()),
+        pa.string_view(),
+        pa.binary_view(),
     ],
 )
 def test_data_types(data_type):

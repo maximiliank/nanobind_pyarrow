@@ -17,13 +17,13 @@
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-#define NB_REGISTER_PYARROW_NESTED_ARRAY(name)                                                   \
-template<>                                                                                       \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                         \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                 \
-};                                                                                               \
-template<>                                                                                       \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_NESTED_ARRAY(name)                                                                         \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
 
 // array_nested classes
 NB_REGISTER_PYARROW_NESTED_ARRAY(ListArray)

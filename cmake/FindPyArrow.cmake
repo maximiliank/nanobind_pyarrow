@@ -101,6 +101,12 @@ set(_pyarrow_TEST_VERSIONS arrow_python)
 if(PYARROW_USE_KNOWN_VERSIONS)
   set(_Arrow_KNOWN_VERSIONS
       ${Arrow_ADDITIONAL_VERSIONS}
+      "2400"
+      "2300"
+      "2200"
+      "2100"
+      "2000"
+      "1900"
       "1800"
       "1700"
       "1600"

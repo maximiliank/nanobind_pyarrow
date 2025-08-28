@@ -18,18 +18,19 @@ NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
 
-template <typename T>
-struct pyarrow_buffer_caster : pyarrow_caster<T, arrow::py::is_buffer, arrow::py::wrap_buffer, arrow::py::unwrap_buffer> {};
+template<typename T>
+struct pyarrow_buffer_caster
+    : pyarrow_caster<T, arrow::py::is_buffer, arrow::py::wrap_buffer, arrow::py::unwrap_buffer> {};
 
 NAMESPACE_END(pyarrow)
 
-#define NB_REGISTER_PYARROW_BUFFER(name)                                                           \
-template<>                                                                                         \
-struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                           \
-    static constexpr auto Name = const_name(NB_STRINGIFY(name));                                   \
-};                                                                                                 \
-template<>                                                                                         \
-struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_buffer_caster<arrow::name> {};
+#define NB_REGISTER_PYARROW_BUFFER(name)                                                                               \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_buffer_caster<arrow::name> {};
 
 NB_REGISTER_PYARROW_BUFFER(Buffer)
 NB_REGISTER_PYARROW_BUFFER(ResizableBuffer)

@@ -44,6 +44,8 @@ import test_scalar_ext as t
         (pa.MonthDayNano([1, -1, -10100]), None, "monthdaynanointerval"),
         ({"a": 1, "b": [1, 2]}, None, "struct"),
         ([("a", 1), ("b", 2)], pa.map_(pa.string(), pa.int8()), "map"),
+        (memoryview(b"abc"), pa.binary_view(), "binaryview"),
+        ("abc", pa.string_view(), "stringview"),
     ],
 )
 def test_scalar(value, ty, callback):
