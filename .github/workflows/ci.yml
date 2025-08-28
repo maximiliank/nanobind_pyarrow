@@ -16,8 +16,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest']
+        os: ['ubuntu-latest', 'windows-latest']
         python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        exclude:
+          - os: windows-latest
+            python: ['3.8', '3.9', '3.10', '3.11', '3.12']
 
     name: "Python ${{ matrix.python }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
@@ -52,3 +55,15 @@ jobs:
       run: >
         cd build;
         python -m pytest
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [standard]
+    if: always()
+    steps:
+      - name: All tests ok
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Some tests failed
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
