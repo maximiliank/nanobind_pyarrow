@@ -17,12 +17,14 @@
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-template<>                                                                                       
-struct pyarrow::pyarrow_caster_name_trait<arrow::ChunkedArray> {                                         
-    static constexpr auto Name = const_name("ChunkedArray");                                 
-};                                                                                               
-template<>                                                                                       
-struct type_caster<std::shared_ptr<arrow::ChunkedArray>> : pyarrow::pyarrow_caster<arrow::ChunkedArray, arrow::py::is_chunked_array, arrow::py::wrap_chunked_array, arrow::py::unwrap_chunked_array> {};
+template<>
+struct pyarrow::pyarrow_caster_name_trait<arrow::ChunkedArray> {
+    static constexpr auto Name = const_name("ChunkedArray");
+};
+template<>
+struct type_caster<std::shared_ptr<arrow::ChunkedArray>>
+    : pyarrow::pyarrow_caster<arrow::ChunkedArray, arrow::py::is_chunked_array, arrow::py::wrap_chunked_array,
+              arrow::py::unwrap_chunked_array> {};
 
 
 NAMESPACE_END(detail)

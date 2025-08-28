@@ -18,13 +18,15 @@ NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
 
 class ImportPyarrow {
-public:
-  inline ImportPyarrow() {
-    if (arrow::py::import_pyarrow() != 0) {
-      nanobind::python_error error;
-      throw std::runtime_error(error.what());
+  public:
+    inline ImportPyarrow()
+    {
+        if (arrow::py::import_pyarrow() != 0)
+        {
+            nanobind::python_error error;
+            throw std::runtime_error(error.what());
+        }
     }
-  }
 };
 
 NAMESPACE_END(pyarrow)

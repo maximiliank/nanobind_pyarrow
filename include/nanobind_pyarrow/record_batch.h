@@ -16,12 +16,14 @@
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 
-template<>                                                                                       
-struct pyarrow::pyarrow_caster_name_trait<arrow::RecordBatch> {                                         
-    static constexpr auto Name = const_name("RecordBatch");                                 
-};                                                                                               
-template<>                                                                                       
-struct type_caster<std::shared_ptr<arrow::RecordBatch>> : pyarrow::pyarrow_caster<arrow::RecordBatch, arrow::py::is_batch, arrow::py::wrap_batch, arrow::py::unwrap_batch> {};
+template<>
+struct pyarrow::pyarrow_caster_name_trait<arrow::RecordBatch> {
+    static constexpr auto Name = const_name("RecordBatch");
+};
+template<>
+struct type_caster<std::shared_ptr<arrow::RecordBatch>>
+    : pyarrow::pyarrow_caster<arrow::RecordBatch, arrow::py::is_batch, arrow::py::wrap_batch, arrow::py::unwrap_batch> {
+};
 
 NAMESPACE_END(detail)
 NAMESPACE_END(NB_NAMESPACE)
