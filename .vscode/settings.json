@@ -23,7 +23,10 @@
    "json.format.keepLines": true,
    "editor.rulers": [ 120 ],
    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-   "cmake.useVsDeveloperEnvironment": "always",
+   "cmake.configureArgs": [
+      "-DPython_ROOT_DIR=${workspaceFolder}/.venv/bin"
+
+   ],
    "python.testing.pytestArgs": [
       "${workspaceFolder}/build/tests"
    ],

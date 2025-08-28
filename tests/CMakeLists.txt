@@ -1,4 +1,3 @@
-set(Python_ROOT_DIR  ${CMAKE_SOURCE_DIR}/.venv/bin)
 if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
   find_package(Python 3.8 REQUIRED COMPONENTS Interpreter Development.Module)
 endif()
