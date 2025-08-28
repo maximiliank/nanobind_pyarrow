@@ -34,15 +34,12 @@ jobs:
 
     - name: Install the latest CMake
       uses: lukka/get-cmake@latest
-    
-    - name: Install nanobind
-      run: python -m pip install nanobind
 
-    - name: Install pyarrow
-      run: python -m pip install pyarrow
+    - name: Install requirements
+      run: python -m pip install -r tests/requirements.txt
 
-    - name: Install PyTest
-      run: python -m pip install pytest pytest-github-actions-annotate-failures
+    - name: Install PyTest github annotations
+      run: python -m pip install pytest-github-actions-annotate-failures
 
     - name: Configure
       run: >
