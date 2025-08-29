@@ -23,7 +23,7 @@ The type caster headers are structured in a similar form than the headers in ``p
 | Types | Type caster header |
 | ----- | ------------------ |
 | ``Array``, ``DoubleArray``, ``Int64Array``, ... | ``#include <nanobind_pyarrow/array_primitive.h>`` |
-| ``BinaryArray``, ``LargeBinaryArray``, ``StringArray``, ``LargeStringArray``, ``FixedSizeBinaryArray`` | ``#include <nanobind_pyarrow/array_binary.h>`` |
+| ``BinaryArray``, ``LargeBinaryArray``, ``StringArray``, ``LargeStringArray``, ``FixedSizeBinaryArray``, ``BinaryViewArray``, ``StringViewArray`` | ``#include <nanobind_pyarrow/array_binary.h>`` |
 | ``ListArray``, ``LargeListArray``, ``MapArray``, ``FixedSizeListArray``, ``StructArray``, ``UnionArray``, ``SparseUnionArray``, ``DenseUnionArray``| ``#include <nanobind_pyarrow/array_nested.h>`` |
 | ``ChunkedArray`` | ``#include <nanobind_pyarrow/chunked_array.h>`` |
 | ``Table`` | ``#include <nanobind_pyarrow/table.h>`` |
