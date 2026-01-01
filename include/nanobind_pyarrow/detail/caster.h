@@ -27,9 +27,9 @@ using has_pyarrow_caster_name_trait = decltype(pyarrow_caster_name_trait<T>::Nam
 template<typename T, auto& Check, auto& Wrap, auto& UnWrap>
 struct pyarrow_caster {
     static_assert(is_detected_v<has_pyarrow_caster_name_trait, T>, "No Name member for NameType in pyarrow_caster");
-    NB_TYPE_CASTER(std::shared_ptr<T>, const_name("pyarrow.lib.") + pyarrow_caster_name_trait<T>::Name);
+    NB_TYPE_CASTER(std::shared_ptr<T>, const_name("pyarrow.lib.") + pyarrow_caster_name_trait<T>::Name)
 
-    bool from_python(handle src, uint8_t /*flags*/, cleanup_list* /*cleanup*/) noexcept
+    bool from_python(handle src, uint8_t /*flags*/, cleanup_list* /*cleanup*/)
     {
         PyObject* source = src.ptr();
         if (!Check(source))
@@ -41,7 +41,7 @@ struct pyarrow_caster {
         return static_cast<bool>(value);
     }
 
-    static handle from_cpp(std::shared_ptr<T> arr, rv_policy /*policy*/, cleanup_list* /*cleanup*/) noexcept
+    static handle from_cpp(std::shared_ptr<T> arr, rv_policy /*policy*/, cleanup_list* /*cleanup*/)
     {
         return Wrap(arr);
     }
