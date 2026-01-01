@@ -8,21 +8,14 @@
 */
 #pragma once
 
-#include <cstddef>
 #include <nanobind/nanobind.h>
 #include <memory>
 #include <arrow/python/pyarrow.h>
-
+#include <nanobind_pyarrow/detail/pyarrow_caster_name_trait.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
-
-template<typename T>
-struct pyarrow_caster_name_trait;
-
-template<typename T>
-using has_pyarrow_caster_name_trait = decltype(pyarrow_caster_name_trait<T>::Name);
 
 template<typename T, auto& Check, auto& Wrap, auto& UnWrap>
 struct pyarrow_caster {

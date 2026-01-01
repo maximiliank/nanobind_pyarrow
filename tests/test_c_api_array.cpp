@@ -2,14 +2,12 @@
 
 #include <nanobind/nanobind.h>
 
-#include <nanobind_pyarrow/c-api/double_caster.hpp>
-
-
-namespace nb = nanobind;
+#include <nanobind_pyarrow/c_api_array_primitive.h>
 
 
 NB_MODULE(test_c_api_array_ext, m)
 {
+    namespace nb = nanobind;
     using namespace nb::literals;
     using namespace nanobind_pyarrow::Testing;
 
