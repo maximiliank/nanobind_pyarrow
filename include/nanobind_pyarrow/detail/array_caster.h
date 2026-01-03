@@ -9,7 +9,6 @@
 #pragma once
 
 #include <nanobind/nanobind.h>
-#include <arrow/array/array_binary.h>
 #include <nanobind_pyarrow/detail/caster.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)

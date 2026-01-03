@@ -1,17 +1,87 @@
 /*
     nanobind_pyarrow/array_primitive.h: conversion between arrow and pyarrow
 
-    Copyright (c) 2024 Maximilian Kleinert <kleinert.max@gmail.com>
+    Copyright (c) 2024-2026 Maximilian Kleinert <kleinert.max@gmail.com>
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE file.
 */
 #pragma once
 
-/*
-  Select whether to use the C API implementation (define NB_PYARROW_USE_C_API as 1) or the normal API (0).
-  Define NB_PYARROW_USE_C_API to 0 for the normal API, then include the shared implementation.
-*/
-#define NB_PYARROW_USE_C_API 0
-#include "impl/array_primitive_common.h" // IWYU pragma: keep
-#undef NB_PYARROW_USE_C_API
+#include <nanobind/nanobind.h>
+#include <memory>
+#include <arrow/array/array_primitive.h>
+
+#if NANOBIND_PYARROW_USE_C_API
+#include <nanobind_pyarrow/detail/capi_array_caster.h>
+namespace {
+    template<typename T>
+    using ArrayCaster = nanobind::detail::pyarrow::pyarrow_c_api_array_caster<T>;
+}
+#else
+#include <nanobind_pyarrow/detail/array_caster.h>
+namespace {
+    template<typename T>
+    using ArrayCaster = nanobind::detail::pyarrow::pyarrow_array_caster<T>;
+}
+#endif
+
+NAMESPACE_BEGIN(NB_NAMESPACE)
+NAMESPACE_BEGIN(detail)
+
+#define NB_REGISTER_PYARROW_ARRAY(name)                                                                                \
+    template<>                                                                                                         \
+    struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
+        static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+    };                                                                                                                 \
+    template<>                                                                                                         \
+    struct type_caster<std::shared_ptr<arrow::name>> : ArrayCaster<arrow::name> {};
+
+// array_base classes
+NB_REGISTER_PYARROW_ARRAY(Array)
+NB_REGISTER_PYARROW_ARRAY(FlatArray)
+NB_REGISTER_PYARROW_ARRAY(PrimitiveArray)
+NB_REGISTER_PYARROW_ARRAY(NullArray)
+
+// array_primitive classes
+NB_REGISTER_PYARROW_ARRAY(BooleanArray)
+NB_REGISTER_PYARROW_ARRAY(DayTimeIntervalArray)
+NB_REGISTER_PYARROW_ARRAY(MonthDayNanoIntervalArray)
+
+// numeric arrays
+NB_REGISTER_PYARROW_ARRAY(HalfFloatArray)
+NB_REGISTER_PYARROW_ARRAY(FloatArray)
+NB_REGISTER_PYARROW_ARRAY(DoubleArray)
+
+NB_REGISTER_PYARROW_ARRAY(Int8Array)
+NB_REGISTER_PYARROW_ARRAY(Int16Array)
+NB_REGISTER_PYARROW_ARRAY(Int32Array)
+NB_REGISTER_PYARROW_ARRAY(Int64Array)
+
+NB_REGISTER_PYARROW_ARRAY(UInt8Array)
+NB_REGISTER_PYARROW_ARRAY(UInt16Array)
+NB_REGISTER_PYARROW_ARRAY(UInt32Array)
+NB_REGISTER_PYARROW_ARRAY(UInt64Array)
+
+NB_REGISTER_PYARROW_ARRAY(Decimal128Array)
+NB_REGISTER_PYARROW_ARRAY(Decimal256Array)
+
+NB_REGISTER_PYARROW_ARRAY(Date32Array)
+NB_REGISTER_PYARROW_ARRAY(Date64Array)
+
+NB_REGISTER_PYARROW_ARRAY(Time32Array)
+NB_REGISTER_PYARROW_ARRAY(Time64Array)
+NB_REGISTER_PYARROW_ARRAY(TimestampArray)
+NB_REGISTER_PYARROW_ARRAY(MonthIntervalArray)
+NB_REGISTER_PYARROW_ARRAY(DurationArray)
+
+// extension array
+NB_REGISTER_PYARROW_ARRAY(ExtensionArray)
+// run end encoded array
+NB_REGISTER_PYARROW_ARRAY(RunEndEncodedArray)
+
+#undef NB_REGISTER_PYARROW_ARRAY
+#undef NB_PYARROW_ARRAY_CASTER
+
+NAMESPACE_END(detail)
+NAMESPACE_END(NB_NAMESPACE)

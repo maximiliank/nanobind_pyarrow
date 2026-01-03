@@ -1,7 +1,16 @@
+import importlib
+
 import numpy as np
 import pyarrow as pa
 import pytest
-import test_chunked_array_ext as t
+
+
+@pytest.fixture(
+    params=["test_chunked_array_ext", "test_chunked_array_ext_capi"],
+    ids=["standard", "capi"],
+)
+def t(request):
+    return importlib.import_module(request.param)
 
 
 @pytest.mark.parametrize(
@@ -20,7 +29,7 @@ import test_chunked_array_ext as t
         np.uint64,
     ],
 )
-def test_chunked_numeric_array(dtype):
+def test_chunked_numeric_array(dtype, t):
     np_arr = np.array([1.0, 2.0, 3.0], dtype=dtype())
     arr = pa.array(np_arr)
     chunked_arr = pa.chunked_array(arr)

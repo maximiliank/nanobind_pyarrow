@@ -1,5 +1,5 @@
 /*
-    nanobind_pyarrow/c-api/double_caster.hpp: conversion between arrow and pyarrow
+    nanobind_pyarrow/detail/capi_array_caster.hpp: conversion between arrow and pyarrow
 
     Copyright (c) 2026 Maximilian Kleinert <kleinert.max@gmail.com>
 
@@ -23,7 +23,8 @@ NAMESPACE_BEGIN(pyarrow)
 
 template<typename T>
 struct pyarrow_c_api_array_caster {
-    static_assert(is_detected_v<has_pyarrow_caster_name_trait, T>, "No Name member for NameType in pyarrow_caster");
+    static_assert(is_detected_v<has_pyarrow_caster_name_trait, T>,
+            "No Name member for NameType in pyarrow_c_api_array_caster");
     NB_TYPE_CASTER(std::shared_ptr<T>, const_name("pyarrow.lib.") + pyarrow_caster_name_trait<T>::Name)
 
     bool from_python(handle src, uint8_t /*flags*/, cleanup_list* /*cleanup*/)
@@ -51,11 +52,11 @@ struct pyarrow_c_api_array_caster {
         {
             return false;
         }
-        value = std::dynamic_pointer_cast<arrow::DoubleArray>(result.ValueOrDie());
+        value = std::dynamic_pointer_cast<T>(result.ValueOrDie());
         return static_cast<bool>(value);
     }
 
-    static handle from_cpp(std::shared_ptr<arrow::DoubleArray> src, rv_policy /*policy*/, cleanup_list* /*cleanup*/)
+    static handle from_cpp(std::shared_ptr<T> src, rv_policy /*policy*/, cleanup_list* /*cleanup*/)
     {
         namespace nb = nanobind;
 
