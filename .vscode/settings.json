@@ -33,5 +33,6 @@
    "python.envFile": "${workspaceFolder}/.env",
    "python.testing.unittestEnabled": false,
    "python.testing.pytestEnabled": true,
-   "python.testing.cwd": "${workspaceFolder}"
+   "python.testing.cwd": "${workspaceFolder}",
+   "terminal.integrated.suggest.inlineSuggestion": "off"
 }

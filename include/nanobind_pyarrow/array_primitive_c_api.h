@@ -1,5 +1,5 @@
 /*
-    nanobind_pyarrow/c_api_array_primitive.h: conversion between arrow and pyarrow
+    nanobind_pyarrow/array_primitive_c_api.h: conversion between arrow and pyarrow
 
     Copyright (c) 2026 Maximilian Kleinert <kleinert.max@gmail.com>
 
