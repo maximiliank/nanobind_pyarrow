@@ -49,6 +49,14 @@ function(add_extension extension_name)
 
   target_link_libraries(${extension_target} PRIVATE Nanobind_Pyarrow_warnings Nanobind_Pyarrow_options nanobind_pyarrow::nanobind_pyarrow)
   target_link_system_libraries(${extension_target} PRIVATE ${NANOBIND_TARGET} nanobind_pyarrow::pyarrow)
+
+  nanobind_add_stub(
+    ${extension_target}_stub
+    MODULE ${extension_target}
+    OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${extension_target}.pyi"
+    PYTHON_PATH $<TARGET_FILE_DIR:${extension_target}>
+    DEPENDS ${extension_target}
+  )
 endfunction()
 
 add_extension(array_binary)

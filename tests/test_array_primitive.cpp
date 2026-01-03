@@ -18,7 +18,6 @@ NB_MODULE(test_array_primitive_ext, m)
     m.def("test_array", func<arrow::Array>());
     m.def("test_null_array", func<arrow::NullArray>());
     m.def("test_boolean_array", func<arrow::BooleanArray>());
-    m.def("test_chunked_array", func<arrow::ChunkedArray>());
 
     // NumericArrays
     m.def("test_halffloat_array", funcCopy<arrow::HalfFloatArray>());

@@ -37,3 +37,5 @@
 __pycache__
 
 .env
+
+/tests/*.pyi
