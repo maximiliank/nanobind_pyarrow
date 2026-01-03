@@ -8,12 +8,14 @@
 */
 #pragma once
 
+#include <arrow/record_batch.h>
 #include <nanobind/nanobind.h>
 #include <nanobind_pyarrow/detail/pyarrow_caster_name_trait.h>
 #include <memory>
 #include <arrow/api.h>
 #include <arrow/c/abi.h>
 #include <arrow/c/bridge.h>
+#include <type_traits>
 
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
@@ -47,7 +49,16 @@ struct pyarrow_c_api_array_caster {
         auto array_ptr = static_cast<ArrowArray*>(array_cap.data());
         auto schema_ptr = static_cast<ArrowSchema*>(schema_cap.data());
 
-        auto result = arrow::ImportArray(array_ptr, schema_ptr);
+        auto result = [array_ptr, schema_ptr]() {
+            if constexpr (std::is_same_v<T, arrow::RecordBatch>)
+            {
+                return arrow::ImportRecordBatch(array_ptr, schema_ptr);
+            }
+            else
+            {
+                return arrow::ImportArray(array_ptr, schema_ptr);
+            }
+        }();
         if (!result.ok())
         {
             return false;
@@ -69,8 +80,17 @@ struct pyarrow_c_api_array_caster {
         auto c_array = std::make_unique<ArrowArray>();
         auto c_schema = std::make_unique<ArrowSchema>();
 
-        // Export the C++ array to the C structs
-        auto status = arrow::ExportArray(*src, c_array.get(), c_schema.get());
+        // Export the C++ array/RecordBatch to the C structs
+        auto status = [src, out = c_array.get(), c_schema = c_schema.get()]() {
+            if constexpr (std::is_same_v<T, arrow::RecordBatch>)
+            {
+                return arrow::ExportRecordBatch(*src, out, c_schema);
+            }
+            else
+            {
+                return arrow::ExportArray(*src, out, c_schema);
+            }
+        }();
         if (!status.ok())
         {
             return nb::none().release();
@@ -102,7 +122,14 @@ struct pyarrow_c_api_array_caster {
         // Use pyarrow's constructor to turn the capsules back into an Array object
         // This requires 'pyarrow' to be imported in the Python environment
         object pyarrow = module_::import_("pyarrow");
-        return pyarrow.attr("Array").attr("_import_from_c_capsule")(py_schema, py_array).release();
+        if constexpr (std::is_same_v<T, arrow::RecordBatch>)
+        {
+            return pyarrow.attr("RecordBatch").attr("_import_from_c_capsule")(py_schema, py_array).release();
+        }
+        else
+        {
+            return pyarrow.attr("Array").attr("_import_from_c_capsule")(py_schema, py_array).release();
+        }
     }
 };
 
