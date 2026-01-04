@@ -28,7 +28,7 @@
 
    ],
    "python.testing.pytestArgs": [
-      "${workspaceFolder}/tests"
+      "${workspaceFolder}/tests", "-s", "--verbose"
    ],
    "python.envFile": "${workspaceFolder}/.env",
    "python.testing.unittestEnabled": false,

@@ -27,6 +27,8 @@ template<typename T>
 struct pyarrow_c_api_array_caster {
     static_assert(is_detected_v<has_pyarrow_caster_name_trait, T>,
             "No Name member for NameType in pyarrow_c_api_array_caster");
+    static_assert(std::is_base_of_v<arrow::Array, T> || std::is_same_v<T, arrow::RecordBatch>,
+            "pyarrow_c_api_array_caster only supports Arrays or RecordBatch");
     NB_TYPE_CASTER(std::shared_ptr<T>, const_name("pyarrow.lib.") + pyarrow_caster_name_trait<T>::Name)
 
     bool from_python(handle src, uint8_t /*flags*/, cleanup_list* /*cleanup*/)

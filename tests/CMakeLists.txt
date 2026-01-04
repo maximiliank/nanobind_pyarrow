@@ -11,6 +11,7 @@ endif()
 if(NOT TARGET nanobind_pyarrow::pyarrow)
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
   find_package(PyArrow REQUIRED)
+  configure_file(${CMAKE_SOURCE_DIR}/.clangd.in ${CMAKE_SOURCE_DIR}/.clangd @ONLY)
 endif()
 
 set(NANOBIND_TARGET nanobind-static)
@@ -95,6 +96,7 @@ add_extension(buffer)
 add_extension(chunked_array)
 add_extension(chunked_array USE_C_API)
 add_extension(datatype)
+add_extension(datatype USE_C_API)
 add_extension(record_batch)
 add_extension(record_batch USE_C_API)
 add_extension(scalar)
@@ -102,6 +104,7 @@ add_extension(table)
 add_extension(table USE_C_API)
 add_extension(tensor)
 add_extension(type)
+add_extension(type USE_C_API)
 
 set(TEST_FILES
     test_array_binary.py

@@ -15,6 +15,7 @@
 #include <arrow/api.h>
 #include <arrow/c/abi.h>
 #include <arrow/c/bridge.h>
+#include <nanobind_pyarrow/detail/always_false.h>
 
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
@@ -74,7 +75,7 @@ struct pyarrow_c_api_stream_caster {
         }
         else
         {
-            return false;
+            static_assert(always_false<T>, "Unsupported type for pyarrow_c_api_stream_caster");
         }
     }
 
@@ -131,7 +132,7 @@ struct pyarrow_c_api_stream_caster {
         }
         else
         {
-            return nb::none().release();
+            static_assert(always_false<T>, "Unsupported type for pyarrow_c_api_stream_caster");
         }
     }
 };

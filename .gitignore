@@ -37,5 +37,6 @@
 __pycache__
 
 .env
+.clangd
 
 /tests/*.pyi

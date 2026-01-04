@@ -1,8 +1,16 @@
+import importlib
 import re
 
 import pyarrow as pa
 import pytest
-import test_datatype_ext as t
+
+
+@pytest.fixture(
+    params=["test_datatype_ext", "test_datatype_ext_capi"],
+    ids=["standard", "capi"],
+)
+def t(request):
+    return importlib.import_module(request.param)
 
 
 @pytest.mark.parametrize(
@@ -39,16 +47,28 @@ import test_datatype_ext as t
         pa.list_(pa.int32(), 2),
         pa.large_list(pa.uint16()),
         pa.map_(pa.string(), pa.int32()),
-        pa.struct([pa.field("a", pa.int32()), pa.field("b", pa.int8()), pa.field("c", pa.string())]),
-        pa.union([pa.field("a", pa.binary(10)), pa.field("b", pa.string())], mode=pa.lib.UnionMode_DENSE),
-        pa.union([pa.field("a", pa.binary(10)), pa.field("b", pa.string())], mode=pa.lib.UnionMode_SPARSE),
+        pa.struct(
+            [
+                pa.field("a", pa.int32()),
+                pa.field("b", pa.int8()),
+                pa.field("c", pa.string()),
+            ]
+        ),
+        pa.union(
+            [pa.field("a", pa.binary(10)), pa.field("b", pa.string())],
+            mode=pa.lib.UnionMode_DENSE,
+        ),
+        pa.union(
+            [pa.field("a", pa.binary(10)), pa.field("b", pa.string())],
+            mode=pa.lib.UnionMode_SPARSE,
+        ),
         pa.dictionary(pa.int32(), pa.string()),
         pa.run_end_encoded(pa.int64(), pa.uint8()),
         pa.string_view(),
         pa.binary_view(),
     ],
 )
-def test_data_types(data_type):
+def test_data_types(data_type, t):
     def resolve_callback():
         callback_name = type(data_type).__name__.lower()
         if callback_name == "datatype":

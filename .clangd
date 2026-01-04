@@ -1,3 +1,0 @@
-CompileFlags:
-  Add:
-    - "--include-directory=../.venv/lib/python3.11/site-packages/pyarrow/include"
