@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include <arrow/chunked_array.h>
 #include <arrow/record_batch.h>
 #include <nanobind/nanobind.h>
 #include <nanobind_pyarrow/detail/pyarrow_caster_name_trait.h>
@@ -70,7 +71,7 @@ struct pyarrow_c_api_stream_caster {
             {
                 return false;
             }
-            value = std::dynamic_pointer_cast<arrow::DoubleArray>(result.ValueOrDie());
+            value = std::dynamic_pointer_cast<arrow::ChunkedArray>(result.ValueOrDie());
             return static_cast<bool>(value);
         }
         else

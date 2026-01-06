@@ -12,20 +12,7 @@
 #include <memory>
 #include <arrow/util/config.h>
 #include <arrow/array/array_binary.h>
-
-#if NANOBIND_PYARROW_USE_C_API
-#include <nanobind_pyarrow/detail/capi_array_caster.h>
-namespace {
-    template<typename T>
-    using ArrayCaster = nanobind::detail::pyarrow::pyarrow_c_api_array_caster<T>;
-}
-#else
 #include <nanobind_pyarrow/detail/array_caster.h>
-namespace {
-    template<typename T>
-    using ArrayCaster = nanobind::detail::pyarrow::pyarrow_array_caster<T>;
-}
-#endif
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
@@ -34,9 +21,10 @@ NAMESPACE_BEGIN(detail)
     template<>                                                                                                         \
     struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
         static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+        static constexpr const char* ObjectName = "Array";                                                             \
     };                                                                                                                 \
     template<>                                                                                                         \
-    struct type_caster<std::shared_ptr<arrow::name>> : ArrayCaster<arrow::name> {};
+    struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
 
 NB_REGISTER_PYARROW_BINARY_ARRAY(BinaryArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(LargeBinaryArray)
