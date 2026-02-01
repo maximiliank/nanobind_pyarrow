@@ -23,10 +23,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Setup Python ${{ matrix.python }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       id: setup_python
       with:
         python-version: ${{ matrix.python }}
@@ -49,9 +49,7 @@ jobs:
       run: cmake --build build -j 2
 
     - name: Run tests
-      run: >
-        cd build;
-        python -m pytest
+      run: python -m pytest
 
   tests:
     runs-on: ubuntu-latest
