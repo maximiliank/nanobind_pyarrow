@@ -1,8 +1,7 @@
 /*
     nanobind/pyarrow/array_binary.h: conversion between arrow and pyarrow
 
-    Copyright (c) 2024 Maximilian Kleinert <kleinert.max@gmail.com>  and
-                       Wenzel Jakob <wenzel.jakob@epfl.ch>
+    Copyright (c) 2024 Maximilian Kleinert <kleinert.max@gmail.com>
 
     All rights reserved. Use of this source code is governed by a
     BSD-style license that can be found in the LICENSE file.
@@ -22,6 +21,7 @@ NAMESPACE_BEGIN(detail)
     template<>                                                                                                         \
     struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
         static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+        static constexpr const char* ObjectName = "Array";                                                             \
     };                                                                                                                 \
     template<>                                                                                                         \
     struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
@@ -36,7 +36,6 @@ NB_REGISTER_PYARROW_BINARY_ARRAY(StringViewArray)
 NB_REGISTER_PYARROW_BINARY_ARRAY(BinaryViewArray)
 #endif
 #undef NB_REGISTER_PYARROW_BINARY_ARRAY
-
 
 NAMESPACE_END(detail)
 NAMESPACE_END(NB_NAMESPACE)

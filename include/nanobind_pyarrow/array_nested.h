@@ -10,9 +10,8 @@
 
 #include <nanobind/nanobind.h>
 #include <memory>
-#include <nanobind_pyarrow/detail/array_caster.h>
-
 #include <arrow/array/array_nested.h>
+#include <nanobind_pyarrow/detail/array_caster.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
 NAMESPACE_BEGIN(detail)
@@ -21,6 +20,7 @@ NAMESPACE_BEGIN(detail)
     template<>                                                                                                         \
     struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
         static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+        static constexpr const char* ObjectName = "Array";                                                             \
     };                                                                                                                 \
     template<>                                                                                                         \
     struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_array_caster<arrow::name> {};
@@ -36,6 +36,7 @@ NB_REGISTER_PYARROW_NESTED_ARRAY(SparseUnionArray)
 NB_REGISTER_PYARROW_NESTED_ARRAY(DenseUnionArray)
 
 #undef NB_REGISTER_PYARROW_NESTED_ARRAY
+#undef NB_PYARROW_ARRAY_CASTER
 
 NAMESPACE_END(detail)
 NAMESPACE_END(NB_NAMESPACE)

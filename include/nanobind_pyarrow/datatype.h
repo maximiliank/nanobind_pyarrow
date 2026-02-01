@@ -11,8 +11,26 @@
 
 #include <nanobind/nanobind.h>
 #include <memory>
-#include <nanobind_pyarrow/detail/caster.h>
 #include <arrow/util/config.h>
+
+#if NANOBIND_PYARROW_USE_C_API
+#include <nanobind_pyarrow/detail/capi_schema_caster.h>
+#include <arrow/c/bridge.h>
+namespace {
+    template<typename T>
+    using DataTypeCaster =
+            nanobind::detail::pyarrow::pyarrow_c_api_schema_caster<T, arrow::ImportType, arrow::ExportType>;
+}
+#else
+#include <nanobind_pyarrow/detail/caster.h>
+
+namespace {
+    template<typename T>
+    using DataTypeCaster = nanobind::detail::pyarrow::pyarrow_caster<T, arrow::py::is_data_type,
+            arrow::py::wrap_data_type, arrow::py::unwrap_data_type>;
+}
+#endif
+
 #include <arrow/type.h>
 
 NAMESPACE_BEGIN(NB_NAMESPACE)
@@ -20,8 +38,7 @@ NAMESPACE_BEGIN(detail)
 NAMESPACE_BEGIN(pyarrow)
 
 template<typename T>
-struct pyarrow_data_type_caster
-    : pyarrow_caster<T, arrow::py::is_data_type, arrow::py::wrap_data_type, arrow::py::unwrap_data_type> {};
+struct pyarrow_data_type_caster : DataTypeCaster<T> {};
 
 NAMESPACE_END(pyarrow)
 
@@ -29,6 +46,7 @@ NAMESPACE_END(pyarrow)
     template<>                                                                                                         \
     struct pyarrow::pyarrow_caster_name_trait<arrow::name> {                                                           \
         static constexpr auto Name = const_name(NB_STRINGIFY(name));                                                   \
+        static constexpr const char* ObjectName = "DataType";                                                          \
     };                                                                                                                 \
     template<>                                                                                                         \
     struct type_caster<std::shared_ptr<arrow::name>> : pyarrow::pyarrow_data_type_caster<arrow::name> {};

@@ -17,16 +17,16 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest']
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13']
 
     name: "Python ${{ matrix.python }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Setup Python ${{ matrix.python }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       id: setup_python
       with:
         python-version: ${{ matrix.python }}
@@ -49,9 +49,8 @@ jobs:
       run: cmake --build build -j 2
 
     - name: Run tests
-      run: >
-        cd build;
-        python -m pytest
+      shell: bash
+      run: tests/run_tests.sh
 
   tests:
     runs-on: ubuntu-latest

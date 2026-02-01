@@ -37,10 +37,10 @@
         {
             "label": "Run tests",
             "type": "shell",
-            "command": "${command:python.interpreterPath}",
-            "args": [ "-m", "pytest", "--verbose" ],
+            "command": "${workspaceFolder}/tests/run_tests.sh",
+            "args": [ "${command:python.interpreterPath}" ],
             "options": {
-                "cwd": "${workspaceFolder}/build/tests"
+                "cwd": "${workspaceFolder}"
             },
             "group": {
                 "kind": "test",

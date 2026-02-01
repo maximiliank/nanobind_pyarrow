@@ -7,6 +7,9 @@ project(
   HOMEPAGE_URL "https://github.com/maximiliank/nanobind_pyarrow"
   LANGUAGES CXX)
 
+include(ProjectOptions.cmake)
+nanobind_pyarrow_setup_options()
+
 string(
   COMPARE EQUAL
           "${CMAKE_SOURCE_DIR}"
@@ -29,6 +32,8 @@ if(NOT PROJECT_IS_TOP_LEVEL)
   endif()
 endif()
 
+
+nanobind_pyarrow_local_options()
 # ---- Declare library ----
 
 add_library(nanobind_pyarrow_nanobind_pyarrow INTERFACE)

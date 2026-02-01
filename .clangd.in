@@ -1,0 +1,4 @@
+CompileFlags:
+  Add:
+    - "--include-directory=@PYARROW_INCLUDE_DIR@"
+    - "-DNANOBIND_PYARROW_USE_C_API"

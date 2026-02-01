@@ -2,23 +2,29 @@
 
 #include <nanobind/nanobind.h>
 
+#ifdef NANOBIND_PYARROW_USE_C_API
+#define EXTENSION_NAME test_array_primitive_ext_capi
+#else
 #include <nanobind_pyarrow/pyarrow_import.h>
+#define EXTENSION_NAME test_array_primitive_ext
+#endif
 #include <nanobind_pyarrow/array_primitive.h>
 
 namespace nb = nanobind;
 
 
-NB_MODULE(test_array_primitive_ext, m)
+NB_MODULE(EXTENSION_NAME, m)
 {
     using namespace nb::literals;
     using namespace nanobind_pyarrow::Testing;
 
+#ifndef NANOBIND_PYARROW_USE_C_API
     static nb::detail::pyarrow::ImportPyarrow module;
+#endif
     // BaseTypes
     m.def("test_array", func<arrow::Array>());
     m.def("test_null_array", func<arrow::NullArray>());
     m.def("test_boolean_array", func<arrow::BooleanArray>());
-    m.def("test_chunked_array", func<arrow::ChunkedArray>());
 
     // NumericArrays
     m.def("test_halffloat_array", funcCopy<arrow::HalfFloatArray>());
