@@ -49,6 +49,8 @@ jobs:
       run: cmake --build build -j 2
 
     - name: Run tests
+      env:
+        PYTHONPATH: ${{ github.workspace }}/build/tests:${{ env.PYTHONPATH }}
       run: python -m pytest
 
   tests:
