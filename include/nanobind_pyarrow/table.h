@@ -10,7 +10,6 @@
 
 #include <nanobind/nanobind.h>
 #include <memory>
-#include <nanobind_pyarrow/detail/caster.h>
 #include <arrow/table.h>
 
 #if NANOBIND_PYARROW_USE_C_API
