@@ -56,7 +56,7 @@ endif()
 # and using its included Arrow C++ libraries or via a package manager, e.g. conan
 if(NOT TARGET arrow::arrow_shared)
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${nanobind_pyarrow_SOURCE_DIR}/cmake")
-  find_package(PyArrow REQUIRED)
+  find_package(Arrow REQUIRED)
 endif()
 
 nanobind_add_module(pyarrow_extension bindings.cpp)
