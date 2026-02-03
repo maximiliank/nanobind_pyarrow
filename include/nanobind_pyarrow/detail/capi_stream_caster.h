@@ -101,7 +101,7 @@ struct pyarrow_c_api_stream_caster {
         }
         else if constexpr (std::is_same_v<T, arrow::ChunkedArray>)
         {
-            status = arrow::ExportChunkedArray(*src, c_stream.get());
+            status = arrow::ExportChunkedArray(src, c_stream.get());
         }
         if (!status.ok())
         {
