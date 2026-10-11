@@ -40,6 +40,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nanobind_pyarrow)
 
+# Note: internal development options (warnings/sanitizers/.env generation)
+# are only enabled when nanobind_pyarrow is the top-level project.
+# FetchContent consumers do not need to provide a .env/.env.in file.
+
 # nanobind_pyarrow requires nanobind and arrow to be found
 if(NOT TARGET Python::Module OR NOT TARGET Python::Interpreter)
   find_package(Python 3.9 REQUIRED COMPONENTS Interpreter Development.Module)

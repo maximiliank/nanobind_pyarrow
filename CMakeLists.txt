@@ -33,7 +33,9 @@ if(NOT PROJECT_IS_TOP_LEVEL)
 endif()
 
 
-nanobind_pyarrow_local_options()
+if(PROJECT_IS_TOP_LEVEL)
+  nanobind_pyarrow_local_options()
+endif()
 # ---- Declare library ----
 
 add_library(nanobind_pyarrow_nanobind_pyarrow INTERFACE)

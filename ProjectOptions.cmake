@@ -69,5 +69,7 @@ macro(nanobind_pyarrow_local_options)
     ${Nanobind_Pyarrow_ENABLE_SANITIZER_THREAD}
     ${Nanobind_Pyarrow_ENABLE_SANITIZER_MEMORY})
 
-  configure_file(${CMAKE_SOURCE_DIR}/.env.in ${CMAKE_SOURCE_DIR}/.env @ONLY)
+  if(EXISTS "${PROJECT_SOURCE_DIR}/.env.in")
+    configure_file("${PROJECT_SOURCE_DIR}/.env.in" "${PROJECT_SOURCE_DIR}/.env" @ONLY)
+  endif()
 endmacro()
