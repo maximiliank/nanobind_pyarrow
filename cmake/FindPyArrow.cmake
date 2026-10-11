@@ -8,6 +8,24 @@ endif()
 message(STATUS "Using python ${Python_EXECUTABLE}")
 
 execute_process(
+  COMMAND "${Python_EXECUTABLE}" "-c" "import pyarrow as pa; print(pa.__version__);"
+  RESULT_VARIABLE _PYARROW_SEARCH_SUCCESS
+  OUTPUT_VARIABLE PYARROW_VERSION
+  ERROR_VARIABLE _PYARROW_ERROR_VALUE
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if(_PYARROW_SEARCH_SUCCESS
+   AND NOT
+       _PYARROW_SEARCH_SUCCESS
+       EQUAL
+       0)
+  if(_PYARROW_ERROR_VALUE MATCHES ".*No module named 'pyarrow'.*")
+    message(FATAL_ERROR "pyarrow is not installed")
+  endif()
+  message(FATAL_ERROR "FAILED: ${_PYARROW_SEARCH_SUCCESS}\n${_PYARROW_ERROR_VALUE}")
+endif()
+
+execute_process(
   COMMAND "${Python_EXECUTABLE}" "-c" "import pyarrow as pa; pa.create_library_symlinks();"
   RESULT_VARIABLE _PYARROW_CREATE_SYMLINKS_SUCCESS
   OUTPUT_VARIABLE _PYARROW_CREATE_SYMLINKS_OUTPUT
@@ -96,6 +114,25 @@ list(
 
 message(STATUS "include: ${PYARROW_INCLUDE_DIR} lib: ${ARROW_SEARCH_LIB_PATH}")
 
+set(PYARROW_MINIMUM_CXX_STANDARD 17)
+string(REGEX MATCH "^([0-9]+)" _PYARROW_VERSION_MAJOR "${PYARROW_VERSION}")
+if(CMAKE_MATCH_1)
+  if(CMAKE_MATCH_1 GREATER_EQUAL 23)
+    set(PYARROW_MINIMUM_CXX_STANDARD 20)
+  endif()
+else()
+  message(
+    WARNING
+      "Could not parse pyarrow major version from '${PYARROW_VERSION}'. Falling back to C++20 as a safe minimum.")
+  set(PYARROW_MINIMUM_CXX_STANDARD 20)
+endif()
+
+set(PYARROW_CXX_COMPILE_FEATURE "cxx_std_${PYARROW_MINIMUM_CXX_STANDARD}")
+message(
+  STATUS
+    "Detected pyarrow ${PYARROW_VERSION}; using minimum C++${PYARROW_MINIMUM_CXX_STANDARD} for Arrow/PyArrow imported targets."
+)
+
 set(_arrow_TEST_VERSIONS arrow)
 set(_pyarrow_TEST_VERSIONS arrow_python)
 if(PYARROW_USE_KNOWN_VERSIONS)
@@ -139,7 +176,14 @@ find_library(
   NO_DEFAULT_PATH)
 message(STATUS "Found ${ARROW_PYTHON_LIB} in ${ARROW_SEARCH_LIB_PATH}")
 
-find_package_handle_standard_args(PyArrow REQUIRED_VARS PYARROW_INCLUDE_DIR ARROW_LIB ARROW_PYTHON_LIB)
+find_package_handle_standard_args(
+  PyArrow
+  REQUIRED_VARS
+    PYARROW_INCLUDE_DIR
+    ARROW_LIB
+    ARROW_PYTHON_LIB
+  VERSION_VAR
+    PYARROW_VERSION)
 
 get_filename_component(ARROW_SONAME ${ARROW_LIB} NAME)
 get_filename_component(PYARROW_SONAME ${ARROW_PYTHON_LIB} NAME)
@@ -148,12 +192,16 @@ add_library(arrow::arrow SHARED IMPORTED)
 set_target_properties(
   arrow::arrow
   PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${ARROW_INCLUDE_DIR}"
+             INTERFACE_COMPILE_FEATURES "${PYARROW_CXX_COMPILE_FEATURE}"
              IMPORTED_LOCATION "${ARROW_LIB}"
              IMPORTED_SONAME "${ARROW_SONAME}")
 
 add_library(pyarrow::pyarrow SHARED IMPORTED)
-set_target_properties(pyarrow::pyarrow PROPERTIES IMPORTED_LOCATION "${ARROW_PYTHON_LIB}" IMPORTED_SONAME
-                                                                                          ${PYARROW_SONAME})
+set_target_properties(
+  pyarrow::pyarrow
+  PROPERTIES INTERFACE_COMPILE_FEATURES "${PYARROW_CXX_COMPILE_FEATURE}"
+             IMPORTED_LOCATION "${ARROW_PYTHON_LIB}"
+             IMPORTED_SONAME "${PYARROW_SONAME}")
 
 add_library(nanobind_pyarrow::pyarrow INTERFACE IMPORTED)
 set_property(

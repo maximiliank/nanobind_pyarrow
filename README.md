@@ -8,6 +8,8 @@ The library now supports the pyarrow C API for exchanging arrow objects. This is
 
 This is an extension library to [nanobind](https://github.com/wjakob/nanobind) to support exchange of ``pyarrow`` objects via a ``std::shared_ptr<..>``. The type caster headers are structured in a similar form than the headers in ``pyarrow`` (``array_primitive.h``, ``array_binary.h``, etc) itself:
 
+> **Compiler requirement:** The baseline is C++17, but when using `pyarrow`/Arrow versions 23+ you need a C++20-capable compiler because Arrow headers use C++20 standard library features (e.g. `std::span`, `std::bit_width`).
+
 | Types | Type caster header | Supports C API |
 | ----- | ------------------ | :--------------: |
 | ``Array``, ``DoubleArray``, ``Int64Array``, ... | ``#include <nanobind_pyarrow/array_primitive.h>`` | :white_check_mark: |
